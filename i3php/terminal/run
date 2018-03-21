@@ -1,0 +1,6 @@
+#!/usr/bin/php
+<?php
+
+require 'Main.php';
+
+(new Main())->run();
