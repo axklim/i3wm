@@ -13,4 +13,4 @@ spl_autoload_register(function($class){
 
 $ws = WorkspacesFabric::create();
 
-var_dump($ws->current()->windows()->current());
+var_dump($ws->current()->windows()->list());
