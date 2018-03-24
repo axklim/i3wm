@@ -1,0 +1,37 @@
+#!/usr/bin/php
+<?php
+
+$str = trim(shell_exec('uptime -p'));
+$stack = new SplStack();
+
+push(parse('min', $str), $stack);
+push(parse('hour', $str), $stack);
+push(parse('day', $str), $stack);
+push(parse('year', $str), $stack);
+
+
+$i = 0;
+foreach ($stack as $item)
+{
+//    if ($i == 0) echo '<span size="medium">' . $item . '</span>';
+    if ($i == 0) echo '<span size="small" color="#A9A9A9">' . $item . '</span>';;
+    if ($i == 1) echo '<span size="x-small" color="#505050">' . $item . '</span>';;
+    if ($i == 2) echo '<span size="xx-small" color="#505050">' . $item . '</span>';;
+    $i++;
+}
+
+
+function parse($type, $str)
+{
+    preg_match('/(\d+)\s' . $type . '/', $str, $output_array);
+    return isset($output_array[1]) ? $output_array[1] . $type[0] : false;
+}
+
+/**
+ * @param $val
+ * @param SplStack $stack
+ */
+function push($val, $stack)
+{
+    if($val) $stack->push($val);
+}
