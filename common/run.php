@@ -3,11 +3,14 @@
 
 namespace common;
 
+use common\fabrics\WorkspacesFabric;
+
 spl_autoload_register(function($class){
     require dirname(__DIR__) . '/' . str_replace('\\', '/', $class) . '.php';
 });
 
 
-$i3 = new I3();
 
-var_dump($i3->getCurrentWorkspace());
+$ws = WorkspacesFabric::create();
+
+var_dump($ws->current()->windows()->current());

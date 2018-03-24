@@ -7,7 +7,7 @@ class Workspaces
     private $workspaces;
     private $current;
 
-    public function push(Workspace $workspace)
+    public function push(Workspace $workspace) : void
     {
         if($workspace->isCurrent()) $this->current = $workspace;
         $this->workspaces[$workspace->num] = $workspace;

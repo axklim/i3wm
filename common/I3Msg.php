@@ -2,9 +2,6 @@
 
 namespace common;
 
-use common\entities\Workspaces;
-use common\fabrics\WorkspacesFabric;
-
 class I3Msg
 {
     const COMMAND = 'command';
@@ -16,16 +13,19 @@ class I3Msg
     const BINDING_MODES = 'get_binding_modes';
     const VERSION = 'get_version';
 
-    static function get(string $type) : array
+    static function get(string $type)
     {
         $json = shell_exec('i3-msg -t ' . $type);
         return json_decode($json);
     }
 
-    static function workspaces() : Workspaces
+    static function workspaces() : array
     {
-        $ar = self::get(self::WORKSPACES);
-        return WorkspacesFabric::create($ar);
+        return self::get(self::WORKSPACES);
     }
 
+    static function tree() : \stdClass
+    {
+        return self::get(self::TREE);
+    }
 }
