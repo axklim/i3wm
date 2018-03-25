@@ -1,0 +1,51 @@
+#!/usr/bin/php
+<?php
+
+namespace common;
+
+use common\fabrics\WorkspacesFabric;
+
+spl_autoload_register(function($class){
+    require dirname(__DIR__) . '/' . str_replace('\\', '/', $class) . '.php';
+});
+
+$ws = WorkspacesFabric::create();
+$ar = $ws->current()->windows()->list();
+
+$tabOrder = __DIR__ . '/runtime/tabOrder_' . ($ws->current()->num) ?? 'noNum';
+
+
+$oldIds = array_map('trim', file($tabOrder));
+
+if($el = array_shift($oldIds)) $oldIds[] = $el;
+
+
+
+foreach($ar as $window){
+    $ids[$window->id] = $window->id;
+}
+
+foreach ($oldIds as $id)
+{
+    if(isset($ids[$id])){
+        $newIds[] = $id;
+        unset($ids[$id]);
+    }
+}
+
+foreach ($ids as $id){
+    $newIds[] = $id;
+}
+
+
+
+print_r($newIds);
+
+file_put_contents($tabOrder, '');
+foreach ($newIds as $id){
+    file_put_contents($tabOrder, $id . PHP_EOL, FILE_APPEND);
+}
+
+shell_exec("i3-msg '[con_id=" . $oldIds[0] . "] focus'");
+
+//echo $ws->current()->windows()->current()->class;
