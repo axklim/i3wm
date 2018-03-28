@@ -34,7 +34,7 @@ foreach ($oldIds as $id)
 }
 
 foreach ($ids as $id){
-    $newIds[] = $id;
+    $newIds[] = $id;q
 }
 
 

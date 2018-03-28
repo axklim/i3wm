@@ -53,8 +53,8 @@ for_window [class="Nautilus" window_type="normal"] move scratchpad
 bindsym F3 [class="Nautilus" window_type="normal"] scratchpad show
 
 exec skypeforlinux
-for_window [class="Skype"] move scratchpad
-bindsym F6 [class="Skype"] scratchpad show
+for_window [class="Skype" window_type="normal"] move scratchpad
+bindsym F6 [class="Skype" window_type="normal"] scratchpad show
 
 exec keepassx
 for_window [class="Keepassx"] move scratchpad
@@ -72,11 +72,12 @@ bindsym $mod+p exec keepassx
 #############
 
 exec dropbox start
+exec /usr/bin/nm-applet
+
+### настройки тачпада
 exec synclient VertEdgeScroll=0
 
-
 for_window [class="^electron-quick-start$"] floating enable 
-#border none
 
 workspace_auto_back_and_forth yes
 
