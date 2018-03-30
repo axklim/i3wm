@@ -4,22 +4,27 @@
 namespace common;
 
 use common\fabrics\WorkspacesFabric;
+use common\helpers\DoublyLinkedList;
 
 spl_autoload_register(function($class){
     require dirname(__DIR__) . '/' . str_replace('\\', '/', $class) . '.php';
 });
 
+$isBack = isset(getopt('', ['back'])['back']) ? true : false;
+
 $ws = WorkspacesFabric::create();
 $ar = $ws->current()->windows()->list();
+$currentWindowId = $ws->current()->windows()->current()->id;
 
 $tabOrder = __DIR__ . '/runtime/tabOrder_' . ($ws->current()->num) ?? 'noNum';
 
+if($file = file_get_contents($tabOrder)){
+    $ll = unserialize($file);
+}else{
+    $ll = new DoublyLinkedList([]);
+}
 
-$oldIds = array_map('trim', file($tabOrder));
-
-if($el = array_shift($oldIds)) $oldIds[] = $el;
-
-
+$oldIds = $ll->getItems();
 
 foreach($ar as $window){
     $ids[$window->id] = $window->id;
@@ -34,18 +39,21 @@ foreach ($oldIds as $id)
 }
 
 foreach ($ids as $id){
-    $newIds[] = $id;q
+    $newIds[] = $id;
 }
 
+$ll = new DoublyLinkedList($newIds);
+$ll->rewindToValue($currentWindowId);
 
+print_r($ll);
 
-print_r($newIds);
-
-file_put_contents($tabOrder, '');
-foreach ($newIds as $id){
-    file_put_contents($tabOrder, $id . PHP_EOL, FILE_APPEND);
+if($isBack){
+    $ll->prev();
+}else{
+    $ll->next();
 }
 
-shell_exec("i3-msg '[con_id=" . $oldIds[0] . "] focus'");
+shell_exec("i3-msg '[con_id=" . $ll->current() . "] focus'");
 
-//echo $ws->current()->windows()->current()->class;
+
+file_put_contents($tabOrder, serialize($ll));
